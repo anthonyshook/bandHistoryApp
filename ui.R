@@ -13,7 +13,8 @@ library(reactable)
 library(plotly)
 
 dashboardPage(
-  dashboardHeader(inverted = TRUE),
+  dashboardHeader(inverted = TRUE, 
+                  div(style='color:white; margin:10px;', semantic.dashboard::icon('github'), HTML('<a href="https://github.com/anthonyshook/bandHistoryApp" style="color:#ffffff;" target=”_blank”>Get The Source Code Here!</a>'))),
   dashboardSidebar(
     sidebarMenu(
       menuItem(tabName = "Summary", "Summary"),
