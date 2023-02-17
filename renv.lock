@@ -450,6 +450,13 @@
       "Repository": "CRAN",
       "Hash": "b04c27110bf367b4daa93f34f3d58e75"
     },
+    "packrat": {
+      "Package": "packrat",
+      "Version": "0.9.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "2735eb4b51c302014f53acbb3c80a65f"
+    },
     "pillar": {
       "Package": "pillar",
       "Version": "1.8.1",
@@ -547,6 +554,20 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "9787c1fcb680e655d062e7611cadf78e"
+    },
+    "rsconnect": {
+      "Package": "rsconnect",
+      "Version": "0.8.29",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "fe178fc15af80952f546aafedf655b36"
+    },
+    "rstudioapi": {
+      "Package": "rstudioapi",
+      "Version": "0.14",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "690bd2acc42a9166ce34845884459320"
     },
     "sass": {
       "Package": "sass",
