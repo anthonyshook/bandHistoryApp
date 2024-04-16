@@ -12,6 +12,7 @@ library(reactable)
 library(data.table)
 library(ggplot2)
 library(plotly)
+library(bslib)
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
@@ -34,9 +35,27 @@ function(input, output, session) {
   
   ##### UI ELEMENTS #####
   output$band_select_ui <- renderUI({
-    selectInput(inputId = 'band_select', label = 'Pick a Band / Artist!', choices = sort(unique(dat$Band)), multiple = F, 
-                selected = sample(unique(dat$Band), size = 1), selectize = T)
+    # selectInput(inputId = 'band_select', label = 'Pick a Band / Artist!', choices = sort(unique(dat$Band)), multiple = F, 
+    #             selected = sample(unique(dat$Band), size = 1), selectize = T)
+    shinyWidgets::virtualSelectInput(
+      inputId = "band_select",
+      label = "Pick a Band / Artist!",
+      choices = sort(unique(dat$Band)),
+      selected = sample(unique(dat$Band), size = 1),
+      showValueAsTags = TRUE,
+      search = TRUE,
+      multiple = FALSE
+    )
   })
+  
+  
+  
+  ##### OBSERVE #####
+  # observe(input$band_select, {
+  #   sidebar_toggle(
+  #     id = "band_select_sidebar"
+  #   )
+  #   })
   
   ##### REACTIVES #####
   dat_band_summary <- reactive({
@@ -116,7 +135,7 @@ function(input, output, session) {
       geom_tile(aes(fill=Shows, width=0.9, height=0.9)) + 
       scale_y_discrete(limits = rev) + 
       # scale_fill_manual(values=colours) + 
-      labs(title = "Top 10 Bands by Show Count") +
+      labs(title = "Most Seen Bands") +
       theme_minimal(16) + 
       scale_fill_gradient(low="black", high="darkgreen") +
       theme(axis.title.x = element_blank(), 
@@ -139,7 +158,7 @@ function(input, output, session) {
     ggplot(newPlot, aes(x = Shows, y = Venue)) + 
       geom_tile(aes(fill=Shows, width=0.9, height=0.9)) + 
       scale_y_discrete(limits = rev) + 
-      labs(title = "Top 10 Venues by Show Count") + 
+      labs(title = "Most Visited Venues") + 
       theme_minimal(16) + 
       scale_fill_gradient(low="darkblue", high="darkred") +
       theme(axis.title.x = element_blank(), 
@@ -174,5 +193,6 @@ function(input, output, session) {
       tooltip = c('x', 'y', 'fill')
     ) %>% layout(xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE)) %>% config(displayModeBar = F)
   })
+  
   
 }

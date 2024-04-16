@@ -8,63 +8,76 @@
 #
 
 library(shiny)
-library(semantic.dashboard)
 library(reactable)
 library(plotly)
+library(bslib)
+library(waiter)
 
-dashboardPage(
-  dashboardHeader(inverted = TRUE, 
-                  div(style='color:white; margin:10px;', semantic.dashboard::icon('github'), HTML('<a href="https://github.com/anthonyshook/bandHistoryApp" style="color:#ffffff;" target=”_blank”>Get The Source Code Here!</a>'))),
-  dashboardSidebar(
-    sidebarMenu(
-      menuItem(tabName = "Summary", "Summary"),
-      menuItem(tabName = "byBand", "Explore by Band"),
-      menuItem(tabName = "byShow", "Explore by Show"),
-      menuItem(tabName = 'rawData', "Totally Raw Data")
-    )
-  ),
-  dashboardBody(
-    tags$head(
-      tags$style(HTML("hr {border-top: 1px solid #000000;}"))
+page_navbar( 
+  # title = tagList(
+  #   tags$a(bsicons::bs_icon('github'), "Get the Source Code!",
+  #          href='https://github.com/anthonyshook/bandHistoryApp',
+  #          target='_blank', style = 'color:white;')),
+  inverse = TRUE,
+  fillable = TRUE, 
+  footer = tagList(
+    
+    waiting_screen <- tagList(
+      spin_wave()
     ),
-    tabItems(
-      tabItem(tabName = 'Summary',
-              fluidRow(
-                valueBox(subtitle = 'Unique Bands', value=textOutput('num_bands'), width = 4, size = 'huge'),
-                valueBox(subtitle = 'Unique Shows*', value=textOutput('num_shows'), width = 4, size = 'huge'),
-                valueBox(subtitle = 'Unique Venues*', value=textOutput('num_venues'), width = 4, size = 'huge')
-              ),
-              fluidRow(
-                box(width=6, plotOutput('top10_bandGraph')),
-                box(width=6, plotOutput('top10_venuesGraph'))
-              ),
-              fluidRow(
-                box(width=12, plotlyOutput('timeline'),
-                    title = "Timeline of Shows", ribbon = T, title_side = 'top left', collapsible = F, color = 'violet')
-              )
-              # fluidRow(
-              #   valueBox(subtitle = 'Busiest Month', value='test', width = 4, size = 'mini'),
-              #   valueBox(subtitle = 'Busiest Month', value='test', width = 4, size = 'huge'),
-              #   valueBox(subtitle = 'Busiest Month', value='test', width = 4, size = 'huge')
-              # )
-      ),
-      # shiny.semantic::card(textOutput('num_venues'))  # An alternative to Boxes which might be interesting to approach.
-      tabItem(tabName = 'byBand',
-              fluidRow(
-                box(width=4, uiOutput('band_select_ui')),
-                # box(width=6, reactableOutput('raw_data'))
-                box(width=12,
-                    h3('Shows'),
-                    reactableOutput('band_summary'),
-                    hr(),
-                    h3('Seen with...'),
-                    reactableOutput('played_with')
-                )
-              )
-      ),
-      tabItem(tabName='byShow', box(width = 12, reactableOutput('show_list'))),
-      tabItem(tabName='rawData', box(width = 12, reactableOutput('raw_data')))
-    )
-  )
+    autoWaiter(html = waiting_screen, color = 'rgba(84, 89, 95, .75)'),
+    waiter_preloader(html = waiting_screen, color = '#54595F')
+  ),
+  # sidebar = nav,
+  # THEME -------------------------------------------------------------------
+  ## Build a theme to include, perhaps
+  theme = bslib::bs_theme(base_font = bslib::font_collection(bslib::font_google('Roboto', local=TRUE), "sans-serif")),
+  
+  # WAITER LOADING OPTIONS --------------------------------------------------
+  # This is used to include "Loading" options to 
+  
+  
+  # FRONT-END CODE START ----------------------------------------------------
+  
+  nav_spacer(),
+  
+  nav_panel('Summary',
+            layout_columns(
+              value_box("Unique Bands", value = textOutput('num_bands')),
+              value_box("Unique Shows*", value = textOutput('num_shows')),
+              value_box("Unique Venues*", value = textOutput('num_venues'))
+            ),
+            layout_columns(
+              card(plotOutput('top10_bandGraph')),
+              card(plotOutput('top10_venuesGraph'))
+            ),
+            layout_columns(
+              card(plotlyOutput('timeline'))
+            )
+  ),
+  nav_panel('By Band',
+            layout_sidebar(border = TRUE, 
+                           sidebar = sidebar(width = '20%',
+                                             id='band_select_sidebar',
+                                             uiOutput('band_select_ui')
+                           ), 
+                           card(
+                             h3('Shows'),
+                             reactableOutput('band_summary'),
+                             hr(),
+                             h3('Seen with...'),
+                             reactableOutput('played_with')
+                           )
+                           
+            )
+  ), 
+  nav_panel('By Show', 
+            reactableOutput('show_list')),
+  nav_panel('Totally Raw Data', 
+            reactableOutput('raw_data')),
+  nav_item(
+    tagList(
+      tags$a(bsicons::bs_icon('github'), "Get the Source Code!",
+             href='https://github.com/anthonyshook/bandHistoryApp',
+             target='_blank', style = 'color:white;')))
 )
-
