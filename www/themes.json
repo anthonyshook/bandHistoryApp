@@ -1,0 +1,20 @@
+{
+  "dark_blue": {
+    "col_accent_pop": ["#76ABAE"],
+    "col_light": ["#EEEEEE"],
+    "col_accent_focus": ["#222831"],
+    "col_main_body": ["#3E444F"],
+    "col_bg": ["#31363F"],
+    "col_fg": ["#eeeeee"],
+    "col_navbar": ["#222831"]
+  },
+  "dark_orange": {
+    "col_accent_pop": ["#D65A31"],
+    "col_light": ["#EEEEEE"],
+    "col_accent_focus": ["#222831"],
+    "col_main_body": ["#3E444F"],
+    "col_bg": ["#31363F"],
+    "col_fg": ["#eeeeee"],
+    "col_navbar": ["#222831"]
+  } 
+}

@@ -15,6 +15,10 @@ library(plotly)
 library(bslib)
 library(ggtext)
 
+# Theme
+theme_list <- jsonlite::read_json('./www/themes.json', simplifyVector = TRUE)
+active_theme <- theme_list$dark_blue
+
 # Define server logic required to draw a histogram
 function(input, output, session) {
   
@@ -178,17 +182,17 @@ function(input, output, session) {
       # scale_fill_manual(values=colours) +
       labs(title = "Most Seen Bands") +
       theme_minimal(16) +
-      scale_fill_gradient(low="#222831", high="#76ABAE") +
+      scale_fill_gradient(low=active_theme$col_accent_pop, high=active_theme$col_light) +
       theme(axis.title.x = element_blank(),
             axis.title.y = element_blank(),
             axis.ticks.x = element_blank(),
             axis.ticks.y = element_blank(),
-            text = element_text(colour='#EEEEEE'),
-            axis.text = element_text(colour='#EEEEEE', size = 12),
+            text = element_text(colour=active_theme$col_light),
+            axis.text = element_text(colour=active_theme$col_light, size = 12),
             panel.grid = element_blank(),
             legend.position = "none",
-            panel.background = element_rect(fill='#3E444F'), #transparent panel bg
-            plot.background = element_rect(fill='#3E444F', color=NA) #transparent plot bg
+            panel.background = element_rect(fill=active_theme$col_main_body), #transparent panel bg
+            plot.background = element_rect(fill=active_theme$col_main_body, color=NA) #transparent plot bg
       )
 
   })
@@ -205,17 +209,18 @@ function(input, output, session) {
       scale_y_discrete(limits = rev) + 
       labs(title = "Most Visited Venues") + 
       theme_minimal(16) + 
-      scale_fill_gradient(low="darkblue", high="darkred") +
+      # scale_fill_gradient(low="darkblue", high="darkred") +
+      scale_fill_gradient(low=active_theme$col_accent_pop, high=active_theme$col_light) +
       theme(axis.title.x = element_blank(), 
             axis.title.y = element_blank(),
             axis.ticks.x = element_blank(),
             axis.ticks.y = element_blank(),
-            text = element_text(colour='#EEEEEE'),
-            axis.text = element_text(colour='#EEEEEE', size=12),
+            text = element_text(colour=active_theme$col_light),
+            axis.text = element_text(colour=active_theme$col_light, size=12),
             panel.grid = element_blank(),
             legend.position = "none",
-            panel.background = element_rect(fill='#3E444F'), #transparent panel bg
-            plot.background = element_rect(fill='#3E444F', color=NA) #transparent plot bg
+            panel.background = element_rect(fill=active_theme$col_main_body), #transparent panel bg
+            plot.background = element_rect(fill=active_theme$col_main_body, color=NA) #transparent plot bg
       )
   })
   
@@ -229,15 +234,16 @@ function(input, output, session) {
       ggplot(plotdata, aes(x = Year, y = Month)) +
         geom_tile(aes(fill = Shows, width=.8, height=.8, color='transparent')) + 
         scale_y_discrete(limits = rev) + 
-        scale_fill_gradient(low="black", high="purple") +
+        # scale_fill_gradient(low="black", high="purple") +
+        scale_fill_gradient(low=active_theme$col_accent_pop, high=active_theme$col_light) +
         theme_bw(14) +
         theme(axis.title.x = element_blank(), 
               axis.title.y = element_blank(),
               axis.ticks = element_blank(),
               panel.grid = element_blank(),
               legend.position = "none",
-              text = element_text(colour='#EEEEEE'),
-              axis.text = element_text(colour='#EEEEEE'),
+              text = element_text(colour=active_theme$col_light),
+              axis.text = element_text(colour=active_theme$col_light),
               panel.background = element_rect(fill='transparent'), #transparent panel bg
               plot.background = element_rect(fill='transparent', color=NA) #transparent plot bg
         ),

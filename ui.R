@@ -12,24 +12,15 @@ library(reactable)
 library(plotly)
 library(bslib)
 library(waiter)
+library(jsonlite)
 
 # Setup Colors ------------------------------------------------------------
-dark_list <- list(
-  col_accent_pop = '#76ABAE',
-  col_light = '#EEEEEE',
-  col_accent_focus = '#222831',
-  col_main_body = '#3E444F',
-  col_bg = '#31363F',
-  col_fg = '#eeeeee',
-  col_navbar = '#222831'
-)
-
-# light theme
-light <- bs_theme()
+theme_list <- jsonlite::read_json('./www/themes.json', simplifyVector = TRUE)
+active_theme <- theme_list$dark_blue
 
 # Dark theme
-dark <- bs_theme(bg = dark_list$col_bg, fg = dark_list$col_light) |> 
-  bs_add_rules(sass::as_sass(dark_list)) |>
+dark <- bs_theme(bg = active_theme$col_bg, fg = active_theme$col_light) |> 
+  bs_add_rules(sass::as_sass(active_theme)) |>
   bs_add_rules(sass::sass_file("./www/dash.scss"))
 
 
@@ -38,7 +29,7 @@ page_navbar(
   lang='en',
   window_title='Live Show Dashboard',
   inverse = 'auto',
-  bg=dark_list$col_navbar,
+  bg=active_theme$col_navbar,
   fillable = TRUE, 
   
   # WAITER LOADING OPTIONS --------------------------------------------------
@@ -50,7 +41,7 @@ page_navbar(
         ),
         #autoWaiter(html = waiting_screen, color = 'rgba(84, 89, 95, .75)'),
         use_waiter(),
-        waiter_preloader(html = waiting_screen, color = dark_list$col_navbar)
+        waiter_preloader(html = waiting_screen, color = active_theme$col_navbar)
     )
   ),
   # THEME -------------------------------------------------------------------
