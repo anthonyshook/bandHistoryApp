@@ -1,0 +1,55 @@
+
+// Cards 
+.summaryCard {  
+  text-align: center !important;
+  border-bottom-width: 3px !important;
+  border-bottom-color: $col_accent_pop !important;
+  background-color: $col_main_body !important;
+}
+
+.graphs, .tables {
+  background-color: $col_main_body !important;
+}
+                  
+#num_shows, #num_bands, #num_venues {
+  font-size: 48pt !important;
+}
+
+
+// virtual search box 
+.vscomp-toggle-button, .vscomp-dropbox {
+  background-color: $col_main_body !important;
+  color: $col_light !important;
+}
+
+.vscomp-option.selected {
+  color: $col_accent_focus !important;
+  background-color: $col_accent_pop !important;
+}
+
+.vscomp-option.focused {
+  background-color: $col_accent_pop !important;
+  color: $col_accent_focus !important;
+}
+
+// navbar button in mobile 
+button.navbar-toggle {
+  background-color: $col_accent_pop;
+}
+
+// table search 
+.rt-search {
+  background-color: $col_light !important;
+  color: $col_accent_focus !important;
+}
+
+.rt-filter {
+  background-color: $col_light !important;
+  color: $col_accent_focus !important;
+}
+
+// Silly Fix
+.dont-show { 
+  display: none;
+  visibility: hidden;
+}
