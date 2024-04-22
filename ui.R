@@ -12,7 +12,6 @@ library(reactable)
 library(plotly)
 library(bslib)
 library(waiter)
-library(jsonlite)
 
 # Setup Colors ------------------------------------------------------------
 
