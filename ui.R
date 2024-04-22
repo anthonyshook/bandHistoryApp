@@ -15,42 +15,42 @@ library(waiter)
 library(jsonlite)
 
 # Setup Colors ------------------------------------------------------------
-theme_list <- jsonlite::read_json('./www/themes.json', simplifyVector = TRUE)
-active_theme <- theme_list$dark_blue
-
-# Dark theme
-dark <- bs_theme(bg = active_theme$col_bg, fg = active_theme$col_light) |> 
-  bs_add_rules(sass::as_sass(active_theme)) |>
-  bs_add_rules(sass::sass_file("./www/dash.scss"))
 
 
 # SHINY CODE --------------------------------------------------------------
 page_navbar( 
   lang='en',
   window_title='Live Show Dashboard',
-  inverse = 'auto',
-  bg=active_theme$col_navbar,
+  inverse = FALSE,
+  #bg=active_theme$col_navbar_bg,
   fillable = TRUE, 
+  collapsible = TRUE,
   
   # WAITER LOADING OPTIONS --------------------------------------------------
   # Placed quietly in footer -- currently not working, because it just creates a weird effect.
-  footer = tagList(
+  header = tagList(
     div(class = 'dont-show',
         waiting_screen <- tagList(
           spin_wave()
         ),
         #autoWaiter(html = waiting_screen, color = 'rgba(84, 89, 95, .75)'),
         use_waiter(),
-        waiter_preloader(html = waiting_screen, color = active_theme$col_navbar)
+        waiter_preloader(html = waiting_screen, color = active_theme$col_navbar_bg)
     )
   ),
+  # footer = (
+  #   shinyWidgets::switchInput(inputId = 'dark_mode', label=NA, onLabel = 'Dark', offLabel='Light', size='mini')
+  # ),
   # THEME -------------------------------------------------------------------
   ## Build a theme to include, perhaps
   # base_font = bslib::font_collection(bslib::font_google('Nunito', local=TRUE), "sans-serif")
-  theme = dark,
+  theme = bs_theme(
+    bg = active_theme$col_body_bg, fg = active_theme$col_text
+  ) |> 
+    bs_add_rules(sass::as_sass(active_theme)) |>
+    bs_add_rules(sass::sass_file("./www/dash.scss")),
   
   # FRONT-END CODE START ----------------------------------------------------
-  # checkboxInput('dark_mode', 'Dark Mode'),
   nav_spacer(),
   nav_panel('Summary',
             layout_columns(
@@ -75,11 +75,9 @@ page_navbar(
                                              uiOutput('band_select_ui')
                            ), 
                            card(class='tables',
-                                h3('Shows'),
-                                reactableOutput('band_summary'),
-                                hr(),
-                                h3('Seen with...'),
-                                reactableOutput('played_with')
+                                h5('Shows With:'),
+                                uiOutput('selected_band'),
+                                reactableOutput('band_summary')
                            )
                            
             )
@@ -92,5 +90,9 @@ page_navbar(
     tagList(
       tags$a(bsicons::bs_icon('github'), "Get the Source Code!",
              href='https://github.com/anthonyshook/bandHistoryApp',
-             target='_blank', style = 'color:white;')))
+             target='_blank', 
+             class = 'source_link')
+    )
+  ),
+  nav_item(shinyWidgets::switchInput(inputId = 'dark_mode', label=NA, onLabel = 'Dark', offLabel='Light', size='mini', value = TRUE))
 )

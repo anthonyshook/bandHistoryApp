@@ -1,14 +1,46 @@
+//// mixin
+@mixin recolor($color: #000, $opacity: 1) {
+  $r: red($color) / 255;
+  $g: green($color) / 255;
+  $b: blue($color) / 255;
+  $a: $opacity;
+
+  // grayscale fallback if SVG from data url is not supported
+  $lightness: lightness($color);
+  filter: saturate(0%) brightness(0%) invert($lightness) opacity($opacity);
+
+  // color filter
+  $svg-filter-id: "recolor";
+  filter: url('data:image/svg+xml;utf8,\
+    <svg xmlns="http://www.w3.org/2000/svg">\
+      <filter id="#{$svg-filter-id}" color-interpolation-filters="sRGB">\
+        <feColorMatrix type="matrix" values="\
+          0 0 0 0 #{$r}\
+          0 0 0 0 #{$g}\
+          0 0 0 0 #{$b}\
+          0 0 0 #{$a} 0\
+        "/>\
+      </filter>\
+    </svg>\
+    ##{$svg-filter-id}');
+}
+
+// Header
+.navbar.navbar-default {
+    background-color: $col_navbar_bg;
+}
+
 
 // Cards 
 .summaryCard {  
   text-align: center !important;
   border-bottom-width: 3px !important;
-  border-bottom-color: $col_accent_pop !important;
-  background-color: $col_main_body !important;
+  border-bottom-color: $col_accent !important;
+  background-color: $col_card_bg !important;
 }
 
 .graphs, .tables {
-  background-color: $col_main_body !important;
+  background-color: $col_card_bg !important;
 }
                   
 #num_shows, #num_bands, #num_venues {
@@ -18,38 +50,43 @@
 
 // virtual search box 
 .vscomp-toggle-button, .vscomp-dropbox {
-  background-color: $col_main_body !important;
-  color: $col_light !important;
+  background-color: $col_card_bg !important;
+  color: $col_text !important;
 }
 
 .vscomp-option.selected {
-  color: $col_accent_focus !important;
-  background-color: $col_accent_pop !important;
+  color: $col_dropdown_highlight_text !important;
+  background-color: $col_accent !important;
 }
 
 .vscomp-option.focused {
-  background-color: $col_accent_pop !important;
-  color: $col_accent_focus !important;
+  color: $col_dropdown_highlight_text !important;
+  background-color: $col_accent !important;
 }
 
-// navbar button in mobile 
-button.navbar-toggle {
-  background-color: $col_accent_pop;
-}
-
-// table search 
+// table search (these are standard for now)
 .rt-search {
-  background-color: $col_light !important;
-  color: $col_accent_focus !important;
+  background-color: #eeeeee !important;
+  color: #000000 !important;
 }
 
 .rt-filter {
-  background-color: $col_light !important;
-  color: $col_accent_focus !important;
+  background-color: #eeeeee !important;
+  color: #000000 !important;
 }
 
-// Silly Fix
+// Silly Fix for footer with infinite waiter
 .dont-show { 
   display: none;
   visibility: hidden;
+}
+
+// Icon Bar
+.icon-bar {
+  @include recolor($col_navbar_text, 1);
+}
+
+// Waver loading object
+.waver > div {
+  background-color: $col_accent !important;
 }

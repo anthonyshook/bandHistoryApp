@@ -15,9 +15,6 @@ library(plotly)
 library(bslib)
 library(ggtext)
 
-# Theme
-theme_list <- jsonlite::read_json('./www/themes.json', simplifyVector = TRUE)
-active_theme <- theme_list$dark_blue
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
@@ -50,22 +47,43 @@ function(input, output, session) {
       multiple = FALSE
     )
   })
-  
-  
+  outputOptions(output, "band_select_ui", suspendWhenHidden = FALSE)
   
   ##### OBSERVE #####
+  # a way to close the sidebar when the band is selected
   # observeEvent(input$band_select, {
   #   sidebar_toggle(
   #     id = "band_select_sidebar"
   #   )
   #   }, ignoreInit = TRUE, ignoreNULL = TRUE)
-  # observe(session$setCurrentTheme(
-  #   if (isTRUE(input$dark_mode)) dark else light
-  # ))
+  
+  # Set theme as reactive
+  ract_theme_var <- reactiveVal(active_theme)
+  observeEvent(input$dark_mode, {
+    if (input$dark_mode) {
+      active_theme <- theme_list$dark_blue
+    } else {
+      active_theme <- theme_list$light
+    }
+    # Set the new theme object for ggplot purposes
+    ract_theme_var(active_theme)
+    session$setCurrentTheme(
+      bs_theme(
+        bg = active_theme$col_body_bg, fg = active_theme$col_text
+      ) |>
+        bs_add_rules(sass::as_sass(active_theme)) |>
+        bs_add_rules(sass::sass_file("./www/dash.scss"))
+    )
+  })
+
   
   ##### REACTIVES #####
   dat_band_summary <- reactive({
-    dat[Band %in% input$band_select]
+    x <- dat[Band %in% input$band_select][, list(ShowID, BandID, Date, Venue, Band, PlayedWith=1, Notes)]
+    for (i in 1:nrow(x)) {
+      x$PlayedWith[i] <- dat[ShowID == x$ShowID[i] & Band != input$band_select, paste0(Band, collapse=',<br>')]
+    }
+    return(x)
   })
   
   dat_band_played_with <- reactive({
@@ -86,26 +104,25 @@ function(input, output, session) {
   
   
   ##### DATA ELEMENTS #####  
+  # Selected Band Summary
+  output$selected_band <- renderUI({
+    h1(input$band_select)
+  })
   output$band_summary <- renderReactable({
     reactable(dat_band_summary(),
               class = 'tables',
               columns = list(
+                Band = colDef(show = FALSE),
                 ShowID = colDef(show  = FALSE),
-                BandID = colDef(show = FALSE)
+                BandID = colDef(show = FALSE),
+                Venue = colDef(minWidth=125),
+                PlayedWith= colDef(name = 'Played With...', html=TRUE, minWidth = 200)
               ),
-              filterable = F, searchable = F, fullWidth = TRUE, compact = TRUE, pagination = F)
+              defaultSorted = list('Date' = 'desc'),
+              filterable = F, searchable = F, fullWidth = TRUE, compact = F, pagination = F)
   })
-  
-  output$played_with <- renderReactable({
-    reactable(dat_band_played_with(),
-              class = 'tables',
-              columns = list(
-                ShowID = colDef(show = FALSE),
-                BandID = colDef(show = FALSE)
-              ),
-              filterable = F, searchable = F, fullWidth = TRUE, compact = TRUE, pagination = F)
-  })
-  
+
+  # List of Shows, somewhat Raw  
   output$show_list <- renderReactable({
     reactable(dat_show_list(),
               class = 'tables',
@@ -118,7 +135,7 @@ function(input, output, session) {
               filterable=F, searchable = T, fullWidth = T, compact = T, pagination = F, striped=T)
   })
   
-  
+  # Totally Raw Data
   output$raw_data <- renderReactable({
     rtable <- reactable(dat, 
                         class = 'tables',
@@ -150,51 +167,24 @@ function(input, output, session) {
     newPlot[, height := 1]
     newPlot$Band <- factor(x = newPlot$Band, levels = plotdata$Band, ordered = TRUE)
     
-    # ggplot(newPlot, aes(x = height, y = Band, fill = Shows)) + 
-    #   geom_col(position=position_stack()) +
-    #   scale_y_discrete(limits = rev) + 
-    #   labs(x='', y='', title='Most Seen Bands') +
-    #   geom_textbox(fill=NA, 
-    #                aes(label = paste0("<span style=font-size:12pt>", Band, "</span>"),
-    #                    text.colour='white',
-    #                    box.colour=NA,
-    #                    fontface='bold',
-    #                    halign=1,
-    #                    hjust=.75,
-    #                    size = 16),
-    #   ) +
-    #   theme(axis.title = element_blank(), 
-    #         axis.ticks = element_blank(),
-    #         axis.text.y = element_blank(),
-    #         text = element_text(colour='#EEEEEE', size = 16),
-    #         axis.text = element_text(colour='#EEEEEE', size = 12),
-    #         panel.grid = element_blank(),
-    #         legend.position = "none",
-    #         panel.border = element_blank(),
-    #         panel.background = element_rect(fill='#3E444F'), #transparent panel bg
-    #         plot.background = element_rect(fill='#3E444F', color=NA) #transparent plot bg
-    #   ) +
-    #   scale_fill_gradient2(low = '#76ABAE', mid = '#76ABAE', high = '#76ABAE')
-    
     ggplot(newPlot, aes(x = Shows, y = Band)) +
       geom_tile(aes(fill=Shows, width=0.9, height=0.9)) +
       scale_y_discrete(limits = rev) +
       # scale_fill_manual(values=colours) +
       labs(title = "Most Seen Bands") +
-      theme_minimal(16) +
-      scale_fill_gradient(low=active_theme$col_accent_pop, high=active_theme$col_light) +
+      scale_fill_gradient(low=ract_theme_var()$col_grad_low, high=ract_theme_var()$col_grad_high) +
       theme(axis.title.x = element_blank(),
             axis.title.y = element_blank(),
             axis.ticks.x = element_blank(),
             axis.ticks.y = element_blank(),
-            text = element_text(colour=active_theme$col_light),
-            axis.text = element_text(colour=active_theme$col_light, size = 12),
+            text = element_text(colour=ract_theme_var()$col_text, size=16),
+            axis.text = element_text(colour=ract_theme_var()$col_text, size = 14),
             panel.grid = element_blank(),
             legend.position = "none",
-            panel.background = element_rect(fill=active_theme$col_main_body), #transparent panel bg
-            plot.background = element_rect(fill=active_theme$col_main_body, color=NA) #transparent plot bg
+            panel.background = element_rect(fill=ract_theme_var()$col_card_bg), #transparent panel bg
+            plot.background = element_rect(fill=ract_theme_var()$col_card_bg, color=NA) #transparent plot bg
       )
-
+    
   })
   
   # Top 10 Venue Graph
@@ -208,19 +198,18 @@ function(input, output, session) {
       geom_tile(aes(fill=Shows, width=0.9, height=0.9)) + 
       scale_y_discrete(limits = rev) + 
       labs(title = "Most Visited Venues") + 
-      theme_minimal(16) + 
       # scale_fill_gradient(low="darkblue", high="darkred") +
-      scale_fill_gradient(low=active_theme$col_accent_pop, high=active_theme$col_light) +
+      scale_fill_gradient(low=ract_theme_var()$col_grad_low, high=ract_theme_var()$col_grad_high) +
       theme(axis.title.x = element_blank(), 
             axis.title.y = element_blank(),
             axis.ticks.x = element_blank(),
             axis.ticks.y = element_blank(),
-            text = element_text(colour=active_theme$col_light),
-            axis.text = element_text(colour=active_theme$col_light, size=12),
+            text = element_text(colour=ract_theme_var()$col_text, size=16),
+            axis.text = element_text(colour=ract_theme_var()$col_text, size=14),
             panel.grid = element_blank(),
             legend.position = "none",
-            panel.background = element_rect(fill=active_theme$col_main_body), #transparent panel bg
-            plot.background = element_rect(fill=active_theme$col_main_body, color=NA) #transparent plot bg
+            panel.background = element_rect(fill=ract_theme_var()$col_card_bg), #transparent panel bg
+            plot.background = element_rect(fill=ract_theme_var()$col_card_bg, color=NA) #transparent plot bg
       )
   })
   
@@ -235,20 +224,22 @@ function(input, output, session) {
         geom_tile(aes(fill = Shows, width=.8, height=.8, color='transparent')) + 
         scale_y_discrete(limits = rev) + 
         # scale_fill_gradient(low="black", high="purple") +
-        scale_fill_gradient(low=active_theme$col_accent_pop, high=active_theme$col_light) +
+        scale_fill_gradient(low=ract_theme_var()$col_grad_low, high=ract_theme_var()$col_grad_high) +
         theme_bw(14) +
         theme(axis.title.x = element_blank(), 
               axis.title.y = element_blank(),
               axis.ticks = element_blank(),
               panel.grid = element_blank(),
               legend.position = "none",
-              text = element_text(colour=active_theme$col_light),
-              axis.text = element_text(colour=active_theme$col_light),
+              text = element_text(colour=ract_theme_var()$col_text),
+              axis.text = element_text(colour=ract_theme_var()$col_text),
               panel.background = element_rect(fill='transparent'), #transparent panel bg
               plot.background = element_rect(fill='transparent', color=NA) #transparent plot bg
         ),
       tooltip = c('x', 'y', 'fill')
-    ) %>% layout(xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE)) %>% config(displayModeBar = F)
+    ) |> layout(xaxis = list(fixedrange = TRUE),  
+                yaxis = list(fixedrange = TRUE)) |> 
+      config(displayModeBar = FALSE)
   })
   
   
