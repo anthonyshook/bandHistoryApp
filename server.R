@@ -61,7 +61,7 @@ function(input, output, session) {
   ract_theme_var <- reactiveVal(active_theme)
   observeEvent(input$dark_mode, {
     if (input$dark_mode) {
-      active_theme <- theme_list$dark_blue
+      active_theme <- theme_list$dark
     } else {
       active_theme <- theme_list$light
     }
