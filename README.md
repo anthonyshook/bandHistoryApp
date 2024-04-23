@@ -35,7 +35,7 @@ Note -- ShowID and BandID can be whatever you want, as long as they are unique.
 
 ## Installing It for yourself
 
-The `renv.lock` file should allow you to use `renv` to get the proper library set up to run the app.
+The `renv.lock` file should allow you to use `renv` to get the proper library set up to run the app. Just running `renv::restore()` ought to do the trick.
 
 ## The Application
 
