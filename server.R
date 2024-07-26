@@ -242,5 +242,11 @@ function(input, output, session) {
       config(displayModeBar = FALSE)
   })
   
+  output$timetbl <- reactable::renderReactable({
+    # This is currently unused, and needs to be adapted to the light/dark scheme, 
+    # and fixed so that it automatically fits the window
+    plot_data = dat[!is.na(Date), uniqueN(ShowID), by=list(Year = year(Date), Month=month(Date))]
+    reactable(dcast(plot_data, 'Month ~ Year', value.var="V1"), searchable = F, sortable = F, filterable = F, resizable = F, pagination = F)
+  })
   
 }
