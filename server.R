@@ -85,6 +85,7 @@ function(input, output, session) {
   
   
   ##### REACTIVES #####
+  # Band Summary
   dat_band_summary <- reactive({
     x <- dat[Band %in% input$band_select][, list(ShowID, BandID, Date, Venue, Band, PlayedWith=1, Notes)]
     for (i in 1:nrow(x)) {
@@ -93,12 +94,14 @@ function(input, output, session) {
     return(x)
   })
   
+  # Who the band played with
   dat_band_played_with <- reactive({
     other_acts <- dat[!grepl('00000-', ShowID)][ShowID %in% unique(dat[Band %in% input$band_select]$ShowID)]
     other_acts <- other_acts[!(Band %in% input$band_select)]
     return(other_acts)
   })
   
+  # List of Shows
   dat_show_list <- reactive({
     showlist <- dat[!grepl('00000-', ShowID), 
                     list(
@@ -109,6 +112,10 @@ function(input, output, session) {
                     by = list(Date, Venue)]
   })
   
+  # Spotify Search Link
+  spotify_search <- reactive({
+    paste0('https://open.spotify.com/search/', input$band_select)
+  })
   
   ##### DATA ELEMENTS #####  
   # Selected Band Summary
@@ -162,6 +169,11 @@ function(input, output, session) {
                         }
     )
     return(rtable)
+  })
+  
+  # Spotify
+  output$spotify_link <- renderUI({
+    tags$a(href=spotify_search(), 'Search For Band on Spotify!', target='new')
   })
   
   ##### GRAPHS #####

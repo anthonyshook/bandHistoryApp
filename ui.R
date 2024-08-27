@@ -71,7 +71,8 @@ page_navbar(
                                              id='band_select_sidebar',
                                              open=list(desktop='always', 
                                                        mobile='closed'),
-                                             uiOutput('band_select_ui')
+                                             uiOutput('band_select_ui'),
+                                             uiOutput('spotify_link')
                            ), 
                            card(class='tables',
                                 h5('Shows With:'),
