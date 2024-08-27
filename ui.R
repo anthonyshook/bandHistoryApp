@@ -53,8 +53,8 @@ page_navbar(
   nav_spacer(),
   nav_panel('Summary',
             layout_columns(
-              value_box(title = NULL, value = textOutput('num_bands'), h5('Unique Bands'), class = 'summaryCard'),
-              value_box(title = NULL, value = textOutput('num_shows'), h5("Unique Shows*"), class = 'summaryCard'),
+              value_box(title = NULL, value = textOutput('num_bands'), h5('Unique Bands'), textOutput('bands_ytd'), class = 'summaryCard'),
+              value_box(title = NULL, value = textOutput('num_shows'), h5("Unique Shows*"), textOutput('shows_ytd'), class = 'summaryCard'),
               value_box(title = NULL, value = textOutput('num_venues'), h5("Unique Venues*"), class = 'summaryCard')
             ),
             layout_columns(

@@ -30,6 +30,13 @@ function(input, output, session) {
   output$num_venues <- renderText(num_venues)
   output$num_shows <- renderText(num_shows)
   
+  # Year to Date
+  ytd_bands_new <- uniqueN(dat[!is.na(Year), list(FirstYear=min(Year)), by='Band'][FirstYear==year(Sys.Date())]$Band)
+  output$bands_ytd <- renderText({
+    paste0('Year To Date: ', uniqueN(dat[Year==year(Sys.Date())]$Band),' (', ytd_bands_new,' New)')
+  })
+  output$shows_ytd <- renderText({paste0('Year To Date: ', uniqueN(dat[Year==year(Sys.Date())]$ShowID))})
+  
   # Creating a display table
   band_summary  <- dat[Band %in% unique(dat[!is.na(Date)]$Band), list(`Number of Shows` = .N, most_recent_date = max(Date, na.rm=T)), by = Band][order(Band)]
   venue_summary <- dat[, list(`Number of Shows` = uniqueN(ShowID)), by = Venue][order(Venue)]
@@ -75,7 +82,7 @@ function(input, output, session) {
         bs_add_rules(sass::sass_file("./www/dash.scss"))
     )
   })
-
+  
   
   ##### REACTIVES #####
   dat_band_summary <- reactive({
@@ -121,7 +128,7 @@ function(input, output, session) {
               defaultSorted = list('Date' = 'desc'),
               filterable = F, searchable = F, fullWidth = TRUE, compact = F, pagination = F)
   })
-
+  
   # List of Shows, somewhat Raw  
   output$show_list <- renderReactable({
     reactable(dat_show_list(),
