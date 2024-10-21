@@ -30,6 +30,5 @@ theme_list <- list(
   )
 )
 
-
 # Active Theme
 active_theme <- theme_list$dark
