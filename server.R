@@ -239,9 +239,9 @@ function(input, output, session) {
     plotdata$Month <- factor(plotdata$Month, levels = month.abb, ordered=TRUE)
     
     ggplotly(
-      ggplot(plotdata, aes(x = Year, y = Month)) +
+      ggplot(plotdata, aes(y = Year, x = Month)) +
         geom_tile(aes(fill = Shows, width=.8, height=.8, color='transparent')) + 
-        scale_y_discrete(limits = rev) + 
+        #scale_y_discrete(limits = rev) + 
         # scale_fill_gradient(low="black", high="purple") +
         scale_fill_gradient(low=ract_theme_var()$col_grad_low, high=ract_theme_var()$col_grad_high) +
         theme_bw(14) +
@@ -252,6 +252,7 @@ function(input, output, session) {
               legend.position = "none",
               text = element_text(colour=ract_theme_var()$col_text),
               axis.text = element_text(colour=ract_theme_var()$col_text),
+              axis.text.x = element_text(angle=45),
               panel.background = element_rect(fill='transparent'), #transparent panel bg
               plot.background = element_rect(fill='transparent', color=NA) #transparent plot bg
         ),
