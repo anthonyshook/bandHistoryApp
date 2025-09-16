@@ -172,6 +172,17 @@
       ],
       "Hash": "50c838a310445e954bc13f26f26a6ecf"
     },
+    "av": {
+      "Package": "av",
+      "Version": "0.9.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics"
+      ],
+      "Hash": "53a3ebb8386e848440acf746b182ef81"
+    },
     "backports": {
       "Package": "backports",
       "Version": "1.4.1",
@@ -1100,6 +1111,31 @@
       ],
       "Hash": "436542aadb70675e361cf359285af7c7"
     },
+    "processx": {
+      "Package": "processx",
+      "Version": "3.8.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "R6",
+        "ps",
+        "utils"
+      ],
+      "Hash": "790b1edafbd9980aeb8c3d77e3b0ba33"
+    },
+    "progressr": {
+      "Package": "progressr",
+      "Version": "0.15.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "digest",
+        "utils"
+      ],
+      "Hash": "f8e9876b6ffff900e83f171081cacd6f"
+    },
     "promises": {
       "Package": "promises",
       "Version": "1.2.1",
@@ -1115,6 +1151,17 @@
         "stats"
       ],
       "Hash": "0d8a15c9d000970ada1ab21405387dee"
+    },
+    "ps": {
+      "Package": "ps",
+      "Version": "1.8.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "utils"
+      ],
+      "Hash": "b4404b1de13758dea1c0484ad0d48563"
     },
     "purrr": {
       "Package": "purrr",
@@ -1141,6 +1188,24 @@
       ],
       "Hash": "5e3c5dc0b071b21fa128676560dbe94d"
     },
+    "raudiomate": {
+      "Package": "raudiomate",
+      "Version": "0.0.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "raudiomate",
+      "RemoteUsername": "urswilke",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "32a3f32c3d02cd766a1d48065b458215d67b2e7b",
+      "Requirements": [
+        "glue",
+        "htmltools",
+        "magrittr",
+        "processx"
+      ],
+      "Hash": "a80045ae0e17f9064959ed45846ab4b9"
+    },
     "reactR": {
       "Package": "reactR",
       "Version": "0.5.0",
@@ -1165,6 +1230,20 @@
         "reactR"
       ],
       "Hash": "6069eb2a6597963eae0605c1875ff14c"
+    },
+    "remotes": {
+      "Package": "remotes",
+      "Version": "2.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods",
+        "stats",
+        "tools",
+        "utils"
+      ],
+      "Hash": "3ee025083e66f18db6cf27b56e23e141"
     },
     "renv": {
       "Package": "renv",
@@ -1301,6 +1380,21 @@
       ],
       "Hash": "c19df082ba346b0ffa6f833e92de34d1"
     },
+    "seewave": {
+      "Package": "seewave",
+      "Version": "2.2.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "grDevices",
+        "graphics",
+        "methods",
+        "stats",
+        "tuneR",
+        "utils"
+      ],
+      "Hash": "a134938f0b5c36574c615bdf387e7382"
+    },
     "semantic.assets": {
       "Package": "semantic.assets",
       "Version": "1.1.0",
@@ -1412,6 +1506,21 @@
         "shiny"
       ],
       "Hash": "32fa500353f86092c64fe12c062ee34c"
+    },
+    "signal": {
+      "Package": "signal",
+      "Version": "1.8-1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "MASS",
+        "R",
+        "grDevices",
+        "graphics",
+        "stats",
+        "utils"
+      ],
+      "Hash": "2f286162ac1320c8e244331368cf9029"
     },
     "sourcetools": {
       "Package": "sourcetools",
@@ -1599,6 +1708,18 @@
         "xfun"
       ],
       "Hash": "5ac22900ae0f386e54f1c307eca7d843"
+    },
+    "tuneR": {
+      "Package": "tuneR",
+      "Version": "1.4.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods",
+        "signal"
+      ],
+      "Hash": "e876138830aa7f6b6eb15abfbe5d91fc"
     },
     "utf8": {
       "Package": "utf8",
