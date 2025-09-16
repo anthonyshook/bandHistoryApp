@@ -62,7 +62,7 @@ page_navbar(
               card(plotOutput('top10_venuesGraph'), class='graphs')
             ),
             layout_columns(
-              card(plotlyOutput('timeline'), class='graphs')
+              card(plotlyOutput('timeline'), class='graphs',min_height = '600px')
             )
   ),
   nav_panel('Explore By Band',
