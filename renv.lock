@@ -611,6 +611,20 @@
       ],
       "Hash": "52ef83f93f74833007f193b2d4c159a2"
     },
+    "ggridges": {
+      "Package": "ggridges",
+      "Version": "0.5.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "ggplot2",
+        "grid",
+        "scales",
+        "withr"
+      ],
+      "Hash": "e4b598e63d7cf442681ef2861d1be813"
+    },
     "ggtext": {
       "Package": "ggtext",
       "Version": "0.1.2",
